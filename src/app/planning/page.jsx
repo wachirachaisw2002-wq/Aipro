@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react"; // 👈 1. เพิ่ม Suspense เข้ามาตรงนี้
 import { useSearchParams } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { auth, db } from "@/firebase"; // 👈 อย่าลืมเช็ค Path ตรงนี้นะครับ ถ้า Error ให้ปรับเป็น Path ของคุณ (เช่น "@/firebase")
+import { auth, db } from "@/firebase";
 
 import {
   addDoc,
@@ -23,7 +23,8 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
-export default function PlanningPage() {
+// 👇 2. เปลี่ยนชื่อจาก export default function PlanningPage เป็นแค่ฟังก์ชันธรรมดา
+function PlanningContent() {
   const params = useSearchParams();
   const field = params.get("field");
 
@@ -55,7 +56,7 @@ export default function PlanningPage() {
       });
 
       const data = await res.json();
-      setRoadmap(data.result || data.roadmap); // 👈 เผื่อ API ตอบกลับมาเป็น data.result เหมือนหน้าก่อน
+      setRoadmap(data.result || data.roadmap);
     } catch (error) {
       console.error(error);
       alert("เกิดข้อผิดพลาดในการเชื่อมต่อ AI");
@@ -303,5 +304,18 @@ export default function PlanningPage() {
       </div>
 
     </div>
+  );
+}
+
+// 👇 3. สร้างฟังก์ชันตัวหลักอันใหม่ ที่เอา Suspense มาครอบ Content ไว้ข้างใน
+export default function PlanningPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-500">
+        กำลังโหลดข้อมูล...
+      </div>
+    }>
+      <PlanningContent />
+    </Suspense>
   );
 }
