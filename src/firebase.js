@@ -1,18 +1,21 @@
+// src/firebase.js
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore"; // เพิ่มการ Import ตัวนี้
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCl6cAGje1ylRDzHTf9BuHHPL-bmuErCUK",
-  authDomain: "career-path-db.firebaseapp.com",
-  projectId: "career-path-db",
-  storageBucket: "career-path-db.firebasestorage.app",
-  messagingSenderId: "443079461430",
-  appId: "1:443079461430:web:f68e081ca8f3fe113da697",
-  measurementId: "G-L8V65WCXQT"
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// ส่งออก db ไปให้ไฟล์อื่นใช้งาน
 export const db = getFirestore(app);
+export const auth = getAuth(app); 
+export const storage = getStorage(app);
